@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "421618876980",
+    "firebase_url": "https://subidha-user-default-rtdb.firebaseio.com",
+    "project_id": "subidha-user",
+    "storage_bucket": "subidha-user.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:421618876980:android:a991f9a8a92bd8cb3c0061",
+        "android_client_info": {
+          "package_name": "com.example.subidha"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "421618876980-626e20q4v3k9j51rmu23atagfgb84fej.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_6bVl-o9k5UHtN5QWILEV_Mirb9wspoI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "421618876980-626e20q4v3k9j51rmu23atagfgb84fej.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:421618876980:android:56dacd6e93f57b283c0061",
+        "android_client_info": {
+          "package_name": "com.example.subidharider"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "421618876980-626e20q4v3k9j51rmu23atagfgb84fej.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_6bVl-o9k5UHtN5QWILEV_Mirb9wspoI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "421618876980-626e20q4v3k9j51rmu23atagfgb84fej.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

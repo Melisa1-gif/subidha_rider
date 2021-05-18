@@ -40,7 +40,7 @@ class _AppState extends State<App> {
                 ],
               ),
               body: Center(
-                child: Text('An error Occurred!.'),
+                child: Text(snapshot.error.toString()),
               ),
             );
           } else if (snapshot.connectionState != ConnectionState.done) {
@@ -67,7 +67,7 @@ class _AppState extends State<App> {
                       ],
                     ),
                     body: Center(
-                      child: Text('An error Occurred!.'),
+                      child: Text(user.error.toString()),
                     ),
                   );
                 } else if (user.connectionState == ConnectionState.waiting) {

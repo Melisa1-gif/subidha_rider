@@ -120,7 +120,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return  Scaffold(
-      appBar: new AppBar(title: new Text('User Login')),
+      appBar: new AppBar(title: new Text('Rider Login')),
       body: Form(
         key: _formKey,
         child: ListView(

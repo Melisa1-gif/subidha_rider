@@ -10,6 +10,7 @@ import 'package:subidharider/screens/terms_and_condition.dart';
 import 'package:subidharider/screens/map.dart';
 
 class WelcomePage extends StatefulWidget {
+  static const String idScreen = "welcome";
   @override
   _WelcomePageState createState() => _WelcomePageState();
 }
@@ -19,6 +20,7 @@ class _WelcomePageState extends State<WelcomePage> {
 
   @override
   Widget build(BuildContext context) {
+    FirebaseAuth fbAuth = FirebaseAuth.instance;
     return new Scaffold(
       key: scaffoldKey,
       drawer: Container(
@@ -26,33 +28,6 @@ class _WelcomePageState extends State<WelcomePage> {
         color: Colors.white,
         child: Drawer(
           child: ListView(children: <Widget>[
-            Container(
-                height: 220,
-                child: DrawerHeader(
-                    child: Column(children: <Widget>[
-                  Image.asset(
-                    'assets/2.png',
-                    height: 130,
-                    width: 130,
-                  ),
-                  SizedBox(
-                    width: 5.0,
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        'User',
-                      ),
-                      SizedBox(
-                        height: 10.0,
-                      ),
-                      Text(
-                        'View Profile',
-                      ),
-                    ],
-                  )
-                ]))),
             SizedBox(
               height: 10.0,
             ),
@@ -97,7 +72,7 @@ class _WelcomePageState extends State<WelcomePage> {
                     context,
                     new MaterialPageRoute(
                         builder: (BuildContext context) =>
-                            new RideHistoryPage()));
+                        new RideHistoryPage()));
               },
             ),
             new Divider(
@@ -113,7 +88,7 @@ class _WelcomePageState extends State<WelcomePage> {
                     context,
                     new MaterialPageRoute(
                         builder: (BuildContext context) =>
-                            new ContactsupportPage()));
+                        new ContactsupportPage()));
               },
             ),
             new Divider(
@@ -129,7 +104,7 @@ class _WelcomePageState extends State<WelcomePage> {
                     context,
                     new MaterialPageRoute(
                         builder: (BuildContext context) =>
-                            new TermsandconditionPage()));
+                        new TermsandconditionPage()));
               },
             ),
             new Divider(
