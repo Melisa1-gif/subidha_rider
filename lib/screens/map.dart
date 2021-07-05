@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:subidharider/screens/user_selection_list.dart';
 
 class Map extends StatefulWidget {
   @override
@@ -59,7 +60,7 @@ class _MapState extends State<Map> {
 //  }
 
   getInfo() {
-    userInfo.get().then((QuerySnapshot snapshot){
+    userInfo.get().then((QuerySnapshot snapshot) {
       snapshot.docs.forEach((DocumentSnapshot doc) {
         print(doc.data);
       });
@@ -149,22 +150,7 @@ class _MapState extends State<Map> {
                     )
                   ],
                 ),
-                child: ListView.builder(
-                  itemCount: userProfileList.length,
-                  itemBuilder: (context, index) {
-                    return Card(
-                      child: ListTile(
-                        title: Text(userProfileList[index].data['user_name']),
-                        subtitle: Text(userProfileList[index].data['phone_number']),
-                        leading: CircleAvatar(
-                          child: Image(
-                            image: AssetImage('assets/2.png'),
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
+                child: UserSelectionList(),
               )),
         ],
       ),
