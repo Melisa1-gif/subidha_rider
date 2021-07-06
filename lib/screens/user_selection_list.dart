@@ -25,6 +25,7 @@ class UserSelectionList extends StatelessWidget {
                     List.generate(bookingSnapshot.data.docs.length, (index) {
                   var dataWithDetails = bookingSnapshot.data.docs[index];
                   return SourceDestinationView(
+                    user_name: dataWithDetails['user_name'],
                     sourceName: dataWithDetails['sourceName'],
                     destinationName: dataWithDetails['destinationName'],
                   );
