@@ -4,11 +4,13 @@ class SourceDestinationView extends StatelessWidget {
   final String user_name;
   final String sourceName;
   final String destinationName;
+  final Function onAccept;
 
   SourceDestinationView({
     @required this.user_name,
     @required this.sourceName,
     @required this.destinationName,
+    @required this.onAccept,
   });
 
   @override
@@ -94,7 +96,9 @@ class SourceDestinationView extends StatelessWidget {
                 ),
               ],
             ),
-            onPressed: () {},
+            onPressed: () {
+              onAccept.call();
+            },
           ),
         ],
       ),

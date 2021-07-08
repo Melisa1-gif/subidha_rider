@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:subidharider/providers/current_ride.dart';
 import 'package:subidharider/screens/user_selection_list.dart';
+import 'package:provider/provider.dart';
 
 class Map extends StatefulWidget {
   @override
@@ -20,6 +22,8 @@ class _MapState extends State<Map> {
   //List userProfilesList = [];
   final userInfo = FirebaseFirestore.instance.collection('booking');
 
+  bool isSelected;
+
 //  Future getUsersInfo() async {
 //    List itemsList =[];
 //    try {
@@ -37,6 +41,7 @@ class _MapState extends State<Map> {
 //  }
 
   List userProfileList = [];
+  DocumentSnapshot riderDetailDocument;
 
   @override
   void initState() {
@@ -79,6 +84,10 @@ class _MapState extends State<Map> {
   //}
   @override
   Widget build(BuildContext context) {
+    isSelected = context.watch<CurrentRide>().isSelected;
+    riderDetailDocument = context.watch<CurrentRide>().riderDetailDocument;
+
+    print(isSelected);
     return Scaffold(
       body: Stack(
         children: [
@@ -130,28 +139,59 @@ class _MapState extends State<Map> {
                   //),
                 ],
               )),
-          Positioned(
-              right: 0,
-              bottom: 0,
-              left: 0,
-              child: Container(
-                height: MediaQuery.of(context).size.height * 0.45,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(18.0),
-                      topRight: Radius.circular(18.0)),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black,
-                      blurRadius: 10.0,
-                      spreadRadius: 0.5,
-                      offset: Offset(0.7, 0.7),
-                    )
-                  ],
-                ),
-                child: UserSelectionList(),
-              )),
+          isSelected
+              ? Positioned(
+            right: 0,
+            bottom: 0,
+            left: 0,
+            child: Container(
+              height: MediaQuery.of(context).size.height * 0.45,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(18.0),
+                    topRight: Radius.circular(18.0)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black,
+                    blurRadius: 10.0,
+                    spreadRadius: 0.5,
+                    offset: Offset(0.7, 0.7),
+                  )
+                ],
+              ),
+              child: Column(
+                children: [
+                  Text(riderDetailDocument['destinationName'], style: TextStyle(color: Colors.black)),
+                ],
+              ),
+            ),
+          )
+              : Positioned(
+            right: 0,
+            bottom: 0,
+            left: 0,
+            child: Container(
+              height: MediaQuery.of(context).size.height * 0.45,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(18.0),
+                    topRight: Radius.circular(18.0)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black,
+                    blurRadius: 10.0,
+                    spreadRadius: 0.5,
+                    offset: Offset(0.7, 0.7),
+                  )
+                ],
+              ),
+              child: UserSelectionList(
+                isSelected: isSelected,
+              ),
+            ),
+          ),
         ],
       ),
     );

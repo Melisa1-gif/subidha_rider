@@ -1,8 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:subidharider/custom/source_destination_view.dart';
+import 'package:subidharider/providers/current_ride.dart';
+import 'package:provider/provider.dart';
 
 class UserSelectionList extends StatelessWidget {
+  final bool isSelected;
+
+  UserSelectionList({
+    @required this.isSelected,
+  });
+
   final CollectionReference bookingCollection =
       FirebaseFirestore.instance.collection('booking');
 
@@ -28,6 +36,9 @@ class UserSelectionList extends StatelessWidget {
                     user_name: dataWithDetails['user_name'],
                     sourceName: dataWithDetails['sourceName'],
                     destinationName: dataWithDetails['destinationName'],
+                    onAccept: () {
+                      context.read<CurrentRide>().setIsSelected(true, dataWithDetails.reference.id);
+                    },
                   );
                 }),
               );

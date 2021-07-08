@@ -31,6 +31,7 @@ class _LoginPageState extends State<LoginPage> {
   Padding buildInputField(
       {String labelText,
         String hintText,
+        String helperText,
         bool isObscured,
         ThemeData theme,
         IconData icon,
@@ -43,6 +44,7 @@ class _LoginPageState extends State<LoginPage> {
         decoration: InputDecoration(
           labelText:labelText,
           hintText: hintText,
+          helperText: helperText,
           icon: new Icon(icon ?? Icons.person),
           hintStyle: TextStyle(color: theme.primaryColorDark),
         ),
@@ -146,6 +148,7 @@ class _LoginPageState extends State<LoginPage> {
                         controller: _emailController,
                         icon: Icons.email,
                         hintText: 'Enter email',
+                        helperText: 'eg. email@email.com',
                         isObscured: false,
                         theme: theme,
                         validation: (value) {
@@ -163,6 +166,7 @@ class _LoginPageState extends State<LoginPage> {
                         controller: _passwordController,
                         icon: Icons.vpn_key,
                         hintText: 'Enter password',
+                        helperText: '8 or more characters',
                         isObscured: true,
                         theme: theme,
                         validation: (value) {
