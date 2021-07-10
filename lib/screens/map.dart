@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -82,12 +83,13 @@ class _MapState extends State<Map> {
   //});
   //}
   //}
+  bool hasMeet;
   @override
   Widget build(BuildContext context) {
     isSelected = context.watch<CurrentRide>().isSelected;
+    hasMeet = context.watch<CurrentRide>().hasMeet;
     riderDetailDocument = context.watch<CurrentRide>().riderDetailDocument;
 
-    print(isSelected);
     return Scaffold(
       body: Stack(
         children: [
@@ -108,31 +110,31 @@ class _MapState extends State<Map> {
                   // color: Colors.blue,
                   //),
 
-                  new Text(
-                    'Available',
-                    style: TextStyle(
-                      color: Colors.red,
-                      fontSize: 10,
-                    ),
-                  ),
-                  Switch(
-                    value: switchValue,
-                    inactiveThumbColor: Colors.blueGrey,
-                    inactiveTrackColor: Colors.red,
-                    activeColor: Colors.black,
-                    onChanged: (value) {
-                      setState(() {
-                        switchValue = value;
-                      });
-                    },
-                  ),
-                  new Text(
-                    'Not Available',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 10,
-                    ),
-                  )
+                  //new Text(
+                    //'Available',
+                    //style: TextStyle(
+                      //color: Colors.red,
+                      //fontSize: 10,
+                    //),
+                  //),
+                  //Switch(
+                    //value: switchValue,
+                    //inactiveThumbColor: Colors.blueGrey,
+                    //inactiveTrackColor: Colors.red,
+                    //activeColor: Colors.black,
+                    //onChanged: (value) {
+                      //setState(() {
+                        //switchValue = value;
+                      //});
+                    //},
+                  //),
+                  //new Text(
+                    //'Not Available',
+                    //style: TextStyle(
+                      //color: Colors.black,
+                      //fontSize: 10,
+                    //),
+                  //)
                   //Icon(
                   // Icons.time_to_leave,
                   //color: Colors.red,
@@ -145,7 +147,7 @@ class _MapState extends State<Map> {
             bottom: 0,
             left: 0,
             child: Container(
-              height: MediaQuery.of(context).size.height * 0.45,
+              height: MediaQuery.of(context).size.height * 0.35,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
@@ -160,10 +162,59 @@ class _MapState extends State<Map> {
                   )
                 ],
               ),
-              child: Column(
-                children: [
-                  Text(riderDetailDocument['destinationName'], style: TextStyle(color: Colors.black)),
-                ],
+              child: Container(
+                padding: EdgeInsets.all(10.0),
+                child: ListView(
+                  children: [
+                    Text('Source', style: Theme.of(context).textTheme.overline.copyWith(
+                      color: Colors.black,
+                    ),),
+                    Text(riderDetailDocument['sourceName'], style: TextStyle(color: Colors.black)),
+                    Text('Destination', style: Theme.of(context).textTheme.overline.copyWith(
+                      color: Colors.black,
+                    ),),
+                    Text(riderDetailDocument['destinationName'], style: TextStyle(color: Colors.black)),
+                    Wrap(
+                      children: [
+                        riderDetailDocument['hasMeet'] ? SizedBox.shrink() : MaterialButton(
+                          color: Theme.of(context).primaryColor,
+                          child: Text('Picked up'),
+                          onPressed: () {
+                            context.read<CurrentRide>().setHasMeet(true, riderDetailDocument.reference.id);
+                          },
+                        ),
+                        riderDetailDocument['hasMeet'] ? Column(
+                          children: [
+                            SizedBox(
+                              width: 20.0,
+                            ),
+                            MaterialButton(
+                              color: Theme.of(context).primaryColor,
+                              child: Text('Dropped'),
+                              onPressed: () async {
+                                await context.read<CurrentRide>().setCompleted(riderDetailDocument.reference.id);
+                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                  backgroundColor: Colors.green,
+                                  content: Text('Successfully dropped'),
+                                ));
+                              },
+                            ),
+                          ],
+                        ) : SizedBox.shrink(),
+                        SizedBox(
+                          width: 20.0,
+                        ),
+                        MaterialButton(
+                          color: Theme.of(context).errorColor,
+                          child: Text('Cancel'),
+                          onPressed: () {
+                            context.read<CurrentRide>().cancleSelection(riderDetailDocument.reference.id);
+                          },
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           )

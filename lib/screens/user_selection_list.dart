@@ -11,8 +11,8 @@ class UserSelectionList extends StatelessWidget {
     @required this.isSelected,
   });
 
-  final CollectionReference bookingCollection =
-      FirebaseFirestore.instance.collection('booking');
+  final Query bookingCollection =
+      FirebaseFirestore.instance.collection('booking').where('isCompleted', isEqualTo: false);
 
   @override
   Widget build(BuildContext context) {

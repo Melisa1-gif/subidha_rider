@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 class CurrentRide extends ChangeNotifier {
   bool isSelected = false;
+  bool hasMeet = false;
   String documentId = '';
   DocumentSnapshot riderDetailDocument;
 
@@ -37,6 +38,61 @@ class CurrentRide extends ChangeNotifier {
     DocumentSnapshot document = await bookingDetail.get();
     riderDetailDocument = document;
     isSelected = value;
+    documentId = id;
+    notifyListeners();
+  }
+
+  setHasMeet(bool value, id) async {
+    FirebaseAuth fbAuth = FirebaseAuth.instance;
+    final DocumentReference bookingDetail =
+    FirebaseFirestore.instance.collection('booking').doc(id);
+    await FirebaseFirestore.instance.runTransaction((transaction) async {
+      transaction.update(bookingDetail, {
+        'hasMeet': true,
+        'rider_id': fbAuth.currentUser.uid,
+      });
+    });
+    DocumentSnapshot document = await bookingDetail.get();
+    riderDetailDocument = document;
+    hasMeet = value;
+    documentId = id;
+    notifyListeners();
+  }
+
+  cancleSelection(id) async {
+    FirebaseAuth fbAuth = FirebaseAuth.instance;
+    final DocumentReference bookingDetail =
+    FirebaseFirestore.instance.collection('booking').doc(id);
+    await FirebaseFirestore.instance.runTransaction((transaction) async {
+      transaction.update(bookingDetail, {
+        'hasMeet': false,
+        'isRiderFound': false,
+        'isCompleted': false,
+      });
+    });
+    DocumentSnapshot document = await bookingDetail.get();
+    riderDetailDocument = document;
+    isSelected = false;
+    hasMeet = false;
+    documentId = id;
+    notifyListeners();
+  }
+
+  setCompleted(id) async {
+    FirebaseAuth fbAuth = FirebaseAuth.instance;
+    final DocumentReference bookingDetail =
+    FirebaseFirestore.instance.collection('booking').doc(id);
+    await FirebaseFirestore.instance.runTransaction((transaction) async {
+      transaction.update(bookingDetail, {
+        'hasMeet': true,
+        'isRiderFound': true,
+        'isCompleted': true,
+      });
+    });
+    DocumentSnapshot document = await bookingDetail.get();
+    riderDetailDocument = document;
+    isSelected = false;
+    hasMeet = false;
     documentId = id;
     notifyListeners();
   }

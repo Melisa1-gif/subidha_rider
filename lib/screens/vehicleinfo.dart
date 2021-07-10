@@ -9,7 +9,7 @@ class VehicleInfoPage extends StatefulWidget {
   _VehicleInfoPageState createState() => _VehicleInfoPageState();
 }
 class _VehicleInfoPageState extends State <VehicleInfoPage> {
-
+ @override
   final TextEditingController _vehiclenoController = TextEditingController();
   File _image;
   final picker = ImagePicker();
@@ -59,10 +59,13 @@ class _VehicleInfoPageState extends State <VehicleInfoPage> {
       final theme = Theme.of(context);
       // TODO: implement build
       return new Scaffold(
+        appBar: new AppBar(
+          title: new Text('Vehicle Info'),
+        ),
         body: Form(
           key: _formKey,
           child: ListView(
-            padding: const EdgeInsets.fromLTRB(16.0, kToolbarHeight, 16.0, 16.0),
+            padding: const EdgeInsets.fromLTRB(16.0, 10.0, 16.0, 16.0),
             children: <Widget>[
               Align(
                 child: SizedBox(
