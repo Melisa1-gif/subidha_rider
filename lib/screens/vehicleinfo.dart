@@ -115,11 +115,20 @@ class _VehicleInfoPageState extends State <VehicleInfoPage> {
                             });
                           },
                         ),
-                        _image == null ? SizedBox.shrink() : CircleAvatar(
-                          radius: 80.0,
-                          backgroundImage: FileImage(_image),
+//                        _image == null ? SizedBox.shrink() : CircleAvatar(
+//                          radius: 80.0,
+//                          backgroundImage: FileImage(_image),
+//                        ),
+                        _image == null ? SizedBox.shrink() : Container(
+                          height: 200.0,
+                          width: 200.0,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: FileImage(_image),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                         ),
-
                         Text(
                           'Choose ride:',
                           style: TextStyle(color: Colors.black),

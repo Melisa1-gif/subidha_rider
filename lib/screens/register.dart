@@ -6,6 +6,7 @@ import 'package:subidharider/custom/custom_button.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:subidharider/screens/mainscreen.dart';
+import 'package:subidharider/screens/terms_and_condition.dart';
 import 'package:subidharider/screens/vehicleinfo.dart';
 import 'dart:io';
 
@@ -25,6 +26,7 @@ class _RegisterPageState extends State<RegisterPage> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   final TextEditingController _cpasswordController = TextEditingController();
+  bool _checkbox = false;
   File _image;
   final picker = ImagePicker();
 
@@ -280,13 +282,50 @@ class _RegisterPageState extends State<RegisterPage> {
                       RawMaterialButton(
                         child: Text('Vehicle Info', style: TextStyle(color: Theme.of(context).accentColor,),),
                         onPressed: (){
-                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+                          Navigator.push(context, MaterialPageRoute(
                             builder: (context) => VehicleInfoPage(),
-                          ), (route) => false);                        },
+                          ));                        },
                       ),
                       SizedBox(
                         height: 5.0,
                       ),
+                      Column(
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Checkbox(
+                                  value: _checkbox,
+                                  onChanged: (bool newValue) {
+                                    setState(
+                                          () {
+                                        _checkbox = newValue;
+                                      },
+                                    );
+                                  }),
+                              SizedBox(width: 10),
+                              RawMaterialButton(
+                                child: Text(
+                                  'Terms and Conditions',
+                                  style: TextStyle(
+                                      color: Theme.of(context).accentColor),
+                                ),
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            TermsandconditionPage(),
+                                      ),
+                                        //  (route) => false
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+
                       buildRegisterBtn(theme),
                       SizedBox(
                         height: 10.0,

@@ -198,7 +198,7 @@ class _LoginPageState extends State<LoginPage> {
                       RawMaterialButton(
                         child: Text('Forget Password', style: TextStyle(color: Theme.of(context).accentColor,),),
                         onPressed: (){
-                          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => ForgotpasswordPage()));
+                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => ForgotpasswordPage()));
                         },
                       ),
                       SizedBox(height: 20.0,),

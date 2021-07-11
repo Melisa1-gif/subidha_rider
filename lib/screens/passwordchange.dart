@@ -1,65 +1,29 @@
-import 'dart:io';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:subidharider/screens/passwordchange.dart';
 
-class ProfilePage extends StatefulWidget {
+class PasswordchangePage extends StatefulWidget{
   @override
-  _ProfilePageState createState() => _ProfilePageState();
+  _PasswordchangePageState createState() =>new _PasswordchangePageState();
 }
-
-class _ProfilePageState extends State<ProfilePage> {
+class _PasswordchangePageState extends State<PasswordchangePage> {
   bool _status = true;
   final FocusNode myFocusNode = FocusNode();
-  TextEditingController nameController = TextEditingController();
-
-  FirebaseAuth fbAuth = FirebaseAuth.instance;
-  final picker = ImagePicker();
-  File newImage;
-
-  @override
-  void initState() {
-    nameController.text = fbAuth.currentUser.displayName;
-    super.initState();
-  }
+  TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    FirebaseAuth fbAuth = FirebaseAuth.instance;
-    var user = fbAuth.currentUser;
-    var image = NetworkImage(user.photoURL);
+
     return new Scaffold(
         body: new Container(
           color: Colors.white,
           child: new ListView(
             children: <Widget>[
               AppBar(
-                title: Text('Profile'),
+                title: Text('Change Password'),
               ),
               Column(
                 children: <Widget>[
                   new Container(
                     color: Colors.white,
-                    child: new Column(
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.only(top: 20.0),
-                          child: new Stack(fit: StackFit.loose, children: <Widget>[
-                            new Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Image(
-                                  image: AssetImage('assets/2.png'),
-                                ),
-                              ],
-                            ),
-                          ]),
-                        )
-                      ],
-                    ),
                   ),
                   new Container(
                     color: Color(0xffFFFFFF),
@@ -68,6 +32,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       child: new Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.start,
+
                         children: <Widget>[
                           Padding(
                               padding: EdgeInsets.all(25.0),
@@ -80,7 +45,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     mainAxisSize: MainAxisSize.min,
                                     children: <Widget>[
                                       new Text(
-                                        'Personal Information',
+                                        'Change Password',
                                         style: TextStyle(
                                             fontSize: 18.0,
                                             color: Colors.black,
@@ -97,34 +62,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   )
                                 ],
                               )),
-                          Align(
-                            alignment: Alignment.center,
-                            child: CircleAvatar(
-                              radius: 40.0,
-                              backgroundImage:
-                              newImage == null ? image : FileImage(newImage),
-                            ),
-                          ),
-                          Align(
-                            alignment: Alignment.center,
-                            child: !_status
-                                ? TextButton(
-                              child: Text(
-                                'Click to change image',
-                                style: TextStyle(
-                                  color: Colors.blue,
-                                ),
-                              ),
-                              onPressed: () async {
-                                final pickedFile = await picker.getImage(
-                                    source: ImageSource.gallery);
-                                setState(() {
-                                  newImage = File(pickedFile.path);
-                                });
-                              },
-                            )
-                                : SizedBox.shrink(),
-                          ),
+
                           Padding(
                               padding: EdgeInsets.only(
                                   left: 25.0, right: 25.0, top: 25.0),
@@ -136,7 +74,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     mainAxisSize: MainAxisSize.min,
                                     children: <Widget>[
                                       new Text(
-                                        'Name',
+                                        'Old Password',
                                         style: TextStyle(
                                             fontSize: 16.0,
                                             color: Colors.black,
@@ -154,7 +92,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 children: <Widget>[
                                   Flexible(
                                     child: TextFormField(
-                                      controller: nameController,
+                                      controller: passwordController,
                                       enabled: !_status,
                                       autofocus: !_status,
                                       style: TextStyle(color: Colors.black87),
@@ -173,10 +111,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                     mainAxisSize: MainAxisSize.min,
                                     children: <Widget>[
                                       new Text(
-                                        'Email ID',
+                                        'New Password',
                                         style: TextStyle(
-                                            color: Colors.black,
                                             fontSize: 16.0,
+                                            color: Colors.black,
                                             fontWeight: FontWeight.bold),
                                       ),
                                     ],
@@ -184,33 +122,22 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ],
                               )),
                           Padding(
-                            padding: EdgeInsets.only(left: 25.0, right: 25.0),
-                            child: TextFormField(
-                              enabled: false,
-                              initialValue: user.email,
-                              style: TextStyle(color: Colors.black87),
-                            ),
-                          ),
-
-                          Padding(
-                            padding: EdgeInsets.only(left: 25.0, right: 25.0),
-                            child: Align(
-                              alignment: Alignment.center,
-                              child: !_status
-                                  ? TextButton(
-                                child: Text(
-                                  'Click to change password',
-                                  style: TextStyle(
-                                    color: Colors.blue,
+                              padding: EdgeInsets.only(
+                                  left: 25.0, right: 25.0, top: 2.0),
+                              child: new Row(
+                                mainAxisSize: MainAxisSize.max,
+                                children: <Widget>[
+                                  Flexible(
+                                    child: TextFormField(
+                                      controller: passwordController,
+                                      enabled: !_status,
+                                      autofocus: !_status,
+                                      style: TextStyle(color: Colors.black87),
+                                    ),
                                   ),
-                                ),
-                                onPressed: () {
-                                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => PasswordchangePage()));
-                                },
-                              )
-                                  : SizedBox.shrink(),
-                            ),
-                          ),
+                                ],
+                              )),
+
                           !_status ? _getActionButtons() : new Container(),
                         ],
                       ),
@@ -246,26 +173,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     textColor: Colors.white,
                     color: Colors.green,
                     onPressed: () async {
-                      FirebaseAuth fbAuth = FirebaseAuth.instance;
-                      if (newImage != null) {
-                        FirebaseStorage _storage = FirebaseStorage.instance;
-                        var reference = _storage
-                            .ref()
-                            .child("images/" + fbAuth.currentUser.uid + ".jpg");
-                        var uploadTask = await reference.putFile(newImage);
-                        fbAuth.currentUser.updateProfile(
-                          displayName: nameController.value.text,
-                          photoURL: await uploadTask.ref.getDownloadURL(),
-                        );
-                      } else {
-                        if (nameController.value.text !=
-                            fbAuth.currentUser.displayName) {
-                          fbAuth.currentUser.updateProfile(
-                            displayName: nameController.value.text,
-                          );
-                        }
-                      }
-
                       setState(() {
                         _status = true;
                         FocusScope.of(context).requestFocus(new FocusNode());
@@ -274,6 +181,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     shape: new RoundedRectangleBorder(
                         borderRadius: new BorderRadius.circular(20.0)),
                   )),
+
             ),
             flex: 2,
           ),

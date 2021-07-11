@@ -6,7 +6,6 @@ import 'package:subidharider/screens/contactsupport.dart';
 import 'package:subidharider/screens/payment.dart';
 import 'package:subidharider/screens/profile.dart';
 import 'package:subidharider/screens/ride_history.dart';
-import 'package:subidharider/screens/settings.dart';
 import 'package:subidharider/screens/terms_and_condition.dart';
 import 'package:subidharider/screens/map.dart';
 
@@ -121,22 +120,6 @@ class _WelcomePageState extends State<WelcomePage> {
                     context,
                     new MaterialPageRoute(
                         builder: (BuildContext context) => new AboutPage()));
-              },
-            ),
-            new Divider(
-              color: Colors.white,
-              height: 5.0,
-            ),
-            ListTile(
-              leading: Icon(Icons.settings),
-              title: new Text('Settings'),
-              onTap: () {
-                Navigator.of(context).pop();
-                Navigator.push(
-                    context,
-                    new MaterialPageRoute(
-                        builder: (BuildContext context) =>
-                        new SettingPage()));
               },
             ),
             new Divider(
