@@ -4,12 +4,14 @@ class SourceDestinationView extends StatelessWidget {
   final String user_name;
   final String sourceName;
   final String destinationName;
+  final String phone_number;
   final Function onAccept;
 
   SourceDestinationView({
     @required this.user_name,
     @required this.sourceName,
     @required this.destinationName,
+    @required this.phone_number,
     @required this.onAccept,
   });
 
@@ -80,6 +82,27 @@ class SourceDestinationView extends StatelessWidget {
               ),
             ),
           ),
+
+          ListTile(
+            dense: true,
+            leading: Container(
+              width: MediaQuery.of(context).size.width * 0.25,
+              child: Text(
+                'Phone number',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            title: Text(
+              phone_number,
+              style: TextStyle(
+                color: Colors.black,
+              ),
+            ),
+          ),
+
           MaterialButton(
             child: Wrap(
               crossAxisAlignment: WrapCrossAlignment.center,

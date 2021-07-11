@@ -36,6 +36,7 @@ class UserSelectionList extends StatelessWidget {
                     user_name: dataWithDetails['user_name'],
                     sourceName: dataWithDetails['sourceName'],
                     destinationName: dataWithDetails['destinationName'],
+                    phone_number: dataWithDetails['phone_number'],
                     onAccept: () {
                       context.read<CurrentRide>().setIsSelected(true, dataWithDetails.reference.id);
                     },

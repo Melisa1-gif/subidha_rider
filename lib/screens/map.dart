@@ -174,6 +174,10 @@ class _MapState extends State<Map> {
                       color: Colors.black,
                     ),),
                     Text(riderDetailDocument['destinationName'], style: TextStyle(color: Colors.black)),
+                    Text('Phone Number', style: Theme.of(context).textTheme.overline.copyWith(
+                      color: Colors.black,
+                    ),),
+                    Text(riderDetailDocument['phone_number'], style: TextStyle(color: Colors.black)),
                     Wrap(
                       children: [
                         riderDetailDocument['hasMeet'] ? SizedBox.shrink() : MaterialButton(
