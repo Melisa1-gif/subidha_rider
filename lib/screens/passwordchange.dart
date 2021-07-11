@@ -34,34 +34,7 @@ class _PasswordchangePageState extends State<PasswordchangePage> {
                         mainAxisAlignment: MainAxisAlignment.start,
 
                         children: <Widget>[
-                          Padding(
-                              padding: EdgeInsets.all(25.0),
-                              child: new Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                mainAxisSize: MainAxisSize.max,
-                                children: <Widget>[
-                                  new Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      new Text(
-                                        'Change Password',
-                                        style: TextStyle(
-                                            fontSize: 18.0,
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ],
-                                  ),
-                                  new Column(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      _status ? _getEditIcon() : new Container(),
-                                    ],
-                                  )
-                                ],
-                              )),
+
 
                           Padding(
                               padding: EdgeInsets.only(
@@ -93,8 +66,8 @@ class _PasswordchangePageState extends State<PasswordchangePage> {
                                   Flexible(
                                     child: TextFormField(
                                       controller: passwordController,
-                                      enabled: !_status,
-                                      autofocus: !_status,
+                                      //enabled: !_status,
+                                      //autofocus: !_status,
                                       style: TextStyle(color: Colors.black87),
                                     ),
                                   ),
@@ -130,8 +103,8 @@ class _PasswordchangePageState extends State<PasswordchangePage> {
                                   Flexible(
                                     child: TextFormField(
                                       controller: passwordController,
-                                      enabled: !_status,
-                                      autofocus: !_status,
+                                     // enabled: !_status,
+                                      //autofocus: !_status,
                                       style: TextStyle(color: Colors.black87),
                                     ),
                                   ),
@@ -143,6 +116,7 @@ class _PasswordchangePageState extends State<PasswordchangePage> {
                       ),
                     ),
                   )
+
                 ],
               ),
             ],
@@ -210,22 +184,4 @@ class _PasswordchangePageState extends State<PasswordchangePage> {
     );
   }
 
-  Widget _getEditIcon() {
-    return new GestureDetector(
-      child: new CircleAvatar(
-        backgroundColor: Colors.red,
-        radius: 14.0,
-        child: new Icon(
-          Icons.edit,
-          color: Colors.white,
-          size: 16.0,
-        ),
-      ),
-      onTap: () {
-        setState(() {
-          _status = false;
-        });
-      },
-    );
-  }
 }
