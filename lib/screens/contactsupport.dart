@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
+import 'package:subidharider/custom/Notification.dart';
 
 class ContactsupportPage extends StatefulWidget {
   @override
@@ -84,7 +86,7 @@ class _ContactsupportPageState extends State<ContactsupportPage> {
       width: 250.0,
       child: RaisedButton(
         onPressed: () {
-
+          submit();
         },
         padding: const EdgeInsets.symmetric(vertical: 12.0),
         color: theme.buttonColor,
@@ -257,5 +259,31 @@ class _ContactsupportPageState extends State<ContactsupportPage> {
         ),
       ),
     );
+  }
+
+  submit() async{
+    try {
+      FirebaseFirestore firebaseFireStore = FirebaseFirestore.instance;
+      firebaseFireStore.collection('Support').add({
+        'Name': _nameController.value.text,
+        'Email': _emailController.value.text,
+        'Message': _messageController.value.text,
+        'Phone': _phoneNumberController.value.text,
+      }).then((value) {
+        _nameController.text = "";
+        _emailController.text = "";
+        _messageController.text = "";
+        _phoneNumberController.text = "";
+      });
+      CustomNotification(
+        title: 'Successful',
+        color: Colors.green,
+        message:
+        'Successfully Submitted',
+      ).show(context);
+    } catch (e) {
+      print(e.toString());
+    }
+
   }
 }

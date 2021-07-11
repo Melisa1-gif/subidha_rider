@@ -40,27 +40,6 @@ class _ProfilePageState extends State<ProfilePage> {
               Column(
                 children: <Widget>[
                   new Container(
-                    color: Colors.white,
-                    child: new Column(
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.only(top: 20.0),
-                          child: new Stack(fit: StackFit.loose, children: <Widget>[
-                            new Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Image(
-                                  image: AssetImage('assets/2.png'),
-                                ),
-                              ],
-                            ),
-                          ]),
-                        )
-                      ],
-                    ),
-                  ),
-                  new Container(
                     color: Color(0xffFFFFFF),
                     child: Padding(
                       padding: EdgeInsets.only(bottom: 25.0),
