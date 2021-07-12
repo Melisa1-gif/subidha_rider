@@ -24,23 +24,6 @@ class _MapState extends State<Map> {
   final userInfo = FirebaseFirestore.instance.collection('booking');
 
   bool isSelected;
-
-//  Future getUsersInfo() async {
-//    List itemsList =[];
-//    try {
-//      await userInfo.get().then((querySnapshot) {
-//        querySnapshot.docs.forEach((element) {
-//          itemsList.add(element.data);
-//
-//        });
-//      });
-//      return itemsList;
-//    } catch (e) {
-//      print(e.toString());
-//      return null;
-//    }
-//  }
-
   List userProfileList = [];
   DocumentSnapshot riderDetailDocument;
 
@@ -51,19 +34,6 @@ class _MapState extends State<Map> {
     super.initState();
   }
 
-//  fetchDatabaseList() async{
-//    dynamic resultant = await getUsersInfo();
-//
-//    if(resultant == null) {
-//      print('Unavle to retrieve');
-//    }
-//    else{
-//      setState(() {
-//        userProfileList = resultant;
-//      });
-//    }
-//
-//  }
 
   getInfo() {
     userInfo.get().then((QuerySnapshot snapshot) {
@@ -73,16 +43,6 @@ class _MapState extends State<Map> {
     });
   }
 
-  //fetchDatabaseList() async {
-  //dynamic resultant = await ().bookride();
-  //if (resultant==null){
-  //print('Unable to retrieve');
-  //}else{
-  //setState(() {
-  //userProfilesList = resultant;
-  //});
-  //}
-  //}
   bool hasMeet;
   @override
   Widget build(BuildContext context) {
