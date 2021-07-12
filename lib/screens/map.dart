@@ -166,6 +166,10 @@ class _MapState extends State<Map> {
                 padding: EdgeInsets.all(10.0),
                 child: ListView(
                   children: [
+                    Text('Name', style: Theme.of(context).textTheme.overline.copyWith(
+                      color: Colors.black,
+                    ),),
+                    Text(riderDetailDocument['user_name'], style: TextStyle(color: Colors.black)),
                     Text('Source', style: Theme.of(context).textTheme.overline.copyWith(
                       color: Colors.black,
                     ),),
