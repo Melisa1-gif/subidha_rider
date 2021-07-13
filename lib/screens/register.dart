@@ -279,13 +279,6 @@ class _RegisterPageState extends State<RegisterPage> {
                         radius: 80.0,
                         backgroundImage: FileImage(_image),
                       ),
-                      RawMaterialButton(
-                        child: Text('Vehicle Info', style: TextStyle(color: Theme.of(context).accentColor,),),
-                        onPressed: (){
-                          Navigator.push(context, MaterialPageRoute(
-                            builder: (context) => VehicleInfoPage(),
-                          ));                        },
-                      ),
                       SizedBox(
                         height: 5.0,
                       ),

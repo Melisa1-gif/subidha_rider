@@ -8,6 +8,7 @@ import 'package:subidharider/screens/profile.dart';
 import 'package:subidharider/screens/ride_history.dart';
 import 'package:subidharider/screens/terms_and_condition.dart';
 import 'package:subidharider/screens/map.dart';
+import 'package:subidharider/screens/vehicleinfo.dart';
 
 class WelcomePage extends StatefulWidget {
   static const String idScreen = "welcome";
@@ -50,13 +51,11 @@ class _WelcomePageState extends State<WelcomePage> {
             ),
             ListTile(
               leading: Icon(Icons.card_giftcard),
-              title: new Text('Payment'),
+              title: new Text('Update vehicle info'),
               onTap: () {
-                Navigator.of(context).pop();
-                Navigator.push(
-                    context,
-                    new MaterialPageRoute(
-                        builder: (BuildContext context) => new PaymentPage()));
+                Navigator.push(context, MaterialPageRoute(
+                  builder: (context) => VehicleInfoPage(),
+                ));
               },
             ),
             new Divider(
