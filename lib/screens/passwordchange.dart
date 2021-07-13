@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class PasswordchangePage extends StatefulWidget{
@@ -5,183 +6,88 @@ class PasswordchangePage extends StatefulWidget{
   _PasswordchangePageState createState() =>new _PasswordchangePageState();
 }
 class _PasswordchangePageState extends State<PasswordchangePage> {
-  bool _status = true;
-  final FocusNode myFocusNode = FocusNode();
   TextEditingController passwordController = TextEditingController();
+  TextEditingController oldPasswordController = TextEditingController();
+  GlobalKey formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
 
     return new Scaffold(
-        body: new Container(
-          color: Colors.white,
+      appBar: AppBar(
+        title: Text('Change Password'),
+      ),
+      backgroundColor: Theme.of(context).primaryColor,
+        body: Form(
+          key: formKey,
           child: new ListView(
-            children: <Widget>[
-              AppBar(
-                title: Text('Change Password'),
+            padding: EdgeInsets.all(20.0),
+            children: [
+              TextFormField(
+                controller: oldPasswordController,
+                obscureText: true,
+                decoration: InputDecoration(
+                  hintText: 'Old Password',
+                ),
+                validator: (value) {
+                  if(value == null || value.length <= 0) {
+                    return 'Compulsory Field';
+                  }
+                  return null;
+                },
+                style: TextStyle(color: Colors.white60),
               ),
-              Column(
-                children: <Widget>[
-                  new Container(
-                    color: Colors.white,
-                  ),
-                  new Container(
-                    color: Color(0xffFFFFFF),
-                    child: Padding(
-                      padding: EdgeInsets.only(bottom: 25.0),
-                      child: new Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
+              SizedBox(
+                height: 20.0,
+              ),
+              TextFormField(
+                controller: passwordController,
+                obscureText: true,
+                decoration: InputDecoration(
+                  hintText: 'New Password',
+                ),
+                style: TextStyle(color: Colors.white60),
+                validator: (value) {
+                  if(value == null || value.length <= 0) {
+                    return 'Compulsory Field';
+                  }
+                  return null;
+                },
+              ),
+              MaterialButton(
+                child: Text('Change Password'),
+                onPressed: () async {
+                  String currentPassword = oldPasswordController.text.trim();
+                  String newPassword = passwordController.text.trim();
+                  final user =  FirebaseAuth.instance.currentUser;
+                  final cred = EmailAuthProvider.credential(
+                      email: user.email, password: currentPassword);
 
-                        children: <Widget>[
-
-
-                          Padding(
-                              padding: EdgeInsets.only(
-                                  left: 25.0, right: 25.0, top: 25.0),
-                              child: new Row(
-                                mainAxisSize: MainAxisSize.max,
-                                children: <Widget>[
-                                  new Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      new Text(
-                                        'Old Password',
-                                        style: TextStyle(
-                                            fontSize: 16.0,
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              )),
-                          Padding(
-                              padding: EdgeInsets.only(
-                                  left: 25.0, right: 25.0, top: 2.0),
-                              child: new Row(
-                                mainAxisSize: MainAxisSize.max,
-                                children: <Widget>[
-                                  Flexible(
-                                    child: TextFormField(
-                                      controller: passwordController,
-                                      //enabled: !_status,
-                                      //autofocus: !_status,
-                                      style: TextStyle(color: Colors.black87),
-                                    ),
-                                  ),
-                                ],
-                              )),
-                          Padding(
-                              padding: EdgeInsets.only(
-                                  left: 25.0, right: 25.0, top: 25.0),
-                              child: new Row(
-                                mainAxisSize: MainAxisSize.max,
-                                children: <Widget>[
-                                  new Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      new Text(
-                                        'New Password',
-                                        style: TextStyle(
-                                            fontSize: 16.0,
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              )),
-                          Padding(
-                              padding: EdgeInsets.only(
-                                  left: 25.0, right: 25.0, top: 2.0),
-                              child: new Row(
-                                mainAxisSize: MainAxisSize.max,
-                                children: <Widget>[
-                                  Flexible(
-                                    child: TextFormField(
-                                      controller: passwordController,
-                                     // enabled: !_status,
-                                      //autofocus: !_status,
-                                      style: TextStyle(color: Colors.black87),
-                                    ),
-                                  ),
-                                ],
-                              )),
-
-                          !_status ? _getActionButtons() : new Container(),
-                        ],
-                      ),
-                    ),
-                  )
-
-                ],
+                  user.reauthenticateWithCredential(cred).then((value) {
+                    user.updatePassword(newPassword).then((value) {
+                      oldPasswordController.text = '';
+                      passwordController.text = '';
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text('Successfully changed password.'),
+                      ));
+                    }).catchError((error) {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text('Error occurred try again later.'),
+                      ));
+                    });
+                  }).catchError((err) {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text('Error occurred try again later.'),
+                    ));
+                  });
+                },
               ),
             ],
           ),
-        ));
-  }
-
-  @override
-  void dispose() {
-    // Clean up the controller when the Widget is disposed
-    myFocusNode.dispose();
-    super.dispose();
-  }
-
-  Widget _getActionButtons() {
-    return Padding(
-      padding: EdgeInsets.only(left: 25.0, right: 25.0, top: 45.0),
-      child: new Row(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.only(right: 10.0),
-              child: Container(
-                  child: new RaisedButton(
-                    child: new Text("Save"),
-                    textColor: Colors.white,
-                    color: Colors.green,
-                    onPressed: () async {
-                      setState(() {
-                        _status = true;
-                        FocusScope.of(context).requestFocus(new FocusNode());
-                      });
-                    },
-                    shape: new RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(20.0)),
-                  )),
-
-            ),
-            flex: 2,
-          ),
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.only(left: 10.0),
-              child: Container(
-                  child: new RaisedButton(
-                    child: new Text("Cancel"),
-                    textColor: Colors.white,
-                    color: Colors.red,
-                    onPressed: () {
-                      setState(() {
-                        _status = true;
-                        FocusScope.of(context).requestFocus(new FocusNode());
-                      });
-                    },
-                    shape: new RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(20.0)),
-                  )),
-            ),
-            flex: 2,
-          ),
-        ],
-      ),
+        ),
     );
   }
+
+
 
 }

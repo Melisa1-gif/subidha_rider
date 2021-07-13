@@ -22,7 +22,7 @@ class _MapState extends State<Map> {
   bool switchValue = false;
   static final CameraPosition initialCameraPosition = CameraPosition(
     target: LatLng(27.69329, 85.32227),
-    zoom: 13.0,
+    zoom: 16.0,
   );
 
   //List userProfilesList = [];
@@ -60,7 +60,7 @@ class _MapState extends State<Map> {
     currentPosition = position;
 
     LatLng pos = LatLng(position.latitude, position.longitude);
-    CameraPosition cp = new CameraPosition(target: pos, zoom: 13);
+    CameraPosition cp = new CameraPosition(target: pos, zoom: 16);
     mapController.animateCamera(CameraUpdate.newCameraPosition(cp));
   }
 
@@ -99,7 +99,7 @@ class _MapState extends State<Map> {
                   points: polylineCoordinates,
                 );
                 LatLng newLocation = LatLng(double.parse(riderDetailDocument['sourceLat']), double.parse(riderDetailDocument['sourceLng']));
-                CameraPosition cpp = new CameraPosition(target: newLocation, zoom: 13);
+                CameraPosition cpp = new CameraPosition(target: newLocation, zoom: 16);
                 mapController.animateCamera(CameraUpdate.newCameraPosition(cpp));
                 context.read<CurrentRide>().setPolyline(polyline);
               },
