@@ -1,7 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:subidharider/api.dart';
 import 'package:subidharider/providers/current_ride.dart';
 import 'package:subidharider/screens/user_selection_list.dart';
 import 'package:provider/provider.dart';
@@ -26,6 +31,9 @@ class _MapState extends State<Map> {
   bool isSelected;
   List userProfileList = [];
   DocumentSnapshot riderDetailDocument;
+  Set<Marker> _markers = {};
+  Set<Polyline> _polyline;
+  Completer<GoogleMapController> _controllerGoogleMap = Completer();
 
   @override
   void initState() {
@@ -33,7 +41,6 @@ class _MapState extends State<Map> {
 //    fetchDatabaseList();
     super.initState();
   }
-
 
   getInfo() {
     userInfo.get().then((QuerySnapshot snapshot) {
@@ -43,22 +50,74 @@ class _MapState extends State<Map> {
     });
   }
 
+  Position currentPosition;
+  PolylinePoints polylinePoints = PolylinePoints();
+
   bool hasMeet;
+  void setupPositionLocator() async {
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.bestForNavigation);
+    currentPosition = position;
+
+    LatLng pos = LatLng(position.latitude, position.longitude);
+    CameraPosition cp = new CameraPosition(target: pos, zoom: 10);
+    mapController.animateCamera(CameraUpdate.newCameraPosition(cp));
+  }
   @override
   Widget build(BuildContext context) {
     isSelected = context.watch<CurrentRide>().isSelected;
     hasMeet = context.watch<CurrentRide>().hasMeet;
     riderDetailDocument = context.watch<CurrentRide>().riderDetailDocument;
-
+    _polyline = context.watch<CurrentRide>().polyline;
     return Scaffold(
+      floatingActionButtonLocation: FloatingActionButtonLocation.miniEndTop,
+      floatingActionButton: isSelected
+          ? FloatingActionButton(
+              child: Icon(Icons.location_searching),
+              onPressed: () async {
+                print('loading polyline');
+                if(_polyline.isNotEmpty) return;
+                List<LatLng> polylineCoordinates = [];
+                PolylinePoints polylinePoints = PolylinePoints();
+                PolylineResult polylineResult =
+                    await polylinePoints.getRouteBetweenCoordinates(
+                  kDirectionApi,
+                  PointLatLng(
+                      double.parse(riderDetailDocument['destinationLat']),
+                      double.parse(riderDetailDocument['destinationLng'])),
+                  PointLatLng(double.parse(riderDetailDocument['sourceLat']),
+                      double.parse(riderDetailDocument['sourceLng'])),
+                );
+                for (PointLatLng point in polylineResult.points) {
+                  polylineCoordinates
+                      .add(LatLng(point.latitude, point.longitude));
+                }
+                Polyline polyline = Polyline(
+                  polylineId: PolylineId("polyline"),
+                  color: Color.fromARGB(255, 40, 122, 198),
+                  points: polylineCoordinates,
+                );
+                context.read<CurrentRide>().setPolyline(polyline);
+              },
+            )
+          : null,
       body: Stack(
         children: [
           GoogleMap(
+            polylines: _polyline,
             initialCameraPosition: initialCameraPosition,
             mapType: MapType.normal,
             myLocationEnabled: true,
-            zoomControlsEnabled: false,
             zoomGesturesEnabled: true,
+            zoomControlsEnabled: false,
+            myLocationButtonEnabled: false,
+            onMapCreated: (GoogleMapController controller) {
+              _controllerGoogleMap.complete(controller);
+              mapController = controller;
+              setState(() {
+                setupPositionLocator();
+              });
+            },
           ),
           Padding(
               padding: EdgeInsets.all(40.0),
@@ -71,29 +130,29 @@ class _MapState extends State<Map> {
                   //),
 
                   //new Text(
-                    //'Available',
-                    //style: TextStyle(
-                      //color: Colors.red,
-                      //fontSize: 10,
-                    //),
+                  //'Available',
+                  //style: TextStyle(
+                  //color: Colors.red,
+                  //fontSize: 10,
+                  //),
                   //),
                   //Switch(
-                    //value: switchValue,
-                    //inactiveThumbColor: Colors.blueGrey,
-                    //inactiveTrackColor: Colors.red,
-                    //activeColor: Colors.black,
-                    //onChanged: (value) {
-                      //setState(() {
-                        //switchValue = value;
-                      //});
-                    //},
+                  //value: switchValue,
+                  //inactiveThumbColor: Colors.blueGrey,
+                  //inactiveTrackColor: Colors.red,
+                  //activeColor: Colors.black,
+                  //onChanged: (value) {
+                  //setState(() {
+                  //switchValue = value;
+                  //});
+                  //},
                   //),
                   //new Text(
-                    //'Not Available',
-                    //style: TextStyle(
-                      //color: Colors.black,
-                      //fontSize: 10,
-                    //),
+                  //'Not Available',
+                  //style: TextStyle(
+                  //color: Colors.black,
+                  //fontSize: 10,
+                  //),
                   //)
                   //Icon(
                   // Icons.time_to_leave,
@@ -103,114 +162,148 @@ class _MapState extends State<Map> {
               )),
           isSelected
               ? Positioned(
-            right: 0,
-            bottom: 0,
-            left: 0,
-            child: Container(
-              height: MediaQuery.of(context).size.height * 0.35,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(18.0),
-                    topRight: Radius.circular(18.0)),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black,
-                    blurRadius: 10.0,
-                    spreadRadius: 0.5,
-                    offset: Offset(0.7, 0.7),
-                  )
-                ],
-              ),
-              child: Container(
-                padding: EdgeInsets.all(10.0),
-                child: ListView(
-                  children: [
-                    Text('Name', style: Theme.of(context).textTheme.overline.copyWith(
-                      color: Colors.black,
-                    ),),
-                    Text(riderDetailDocument['user_name'], style: TextStyle(color: Colors.black)),
-                    Text('Source', style: Theme.of(context).textTheme.overline.copyWith(
-                      color: Colors.black,
-                    ),),
-                    Text(riderDetailDocument['sourceName'], style: TextStyle(color: Colors.black)),
-                    Text('Destination', style: Theme.of(context).textTheme.overline.copyWith(
-                      color: Colors.black,
-                    ),),
-                    Text(riderDetailDocument['destinationName'], style: TextStyle(color: Colors.black)),
-                    Text('Phone Number', style: Theme.of(context).textTheme.overline.copyWith(
-                      color: Colors.black,
-                    ),),
-                    Text(riderDetailDocument['phone_number'], style: TextStyle(color: Colors.black)),
-                    Wrap(
-                      children: [
-                        riderDetailDocument['hasMeet'] ? SizedBox.shrink() : MaterialButton(
-                          color: Theme.of(context).primaryColor,
-                          child: Text('Picked up'),
-                          onPressed: () {
-                            context.read<CurrentRide>().setHasMeet(true, riderDetailDocument.reference.id);
-                          },
-                        ),
-                        riderDetailDocument['hasMeet'] ? Column(
-                          children: [
-                            SizedBox(
-                              width: 20.0,
-                            ),
-                            MaterialButton(
-                              color: Theme.of(context).primaryColor,
-                              child: Text('Dropped'),
-                              onPressed: () async {
-                                await context.read<CurrentRide>().setCompleted(riderDetailDocument.reference.id);
-                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                  backgroundColor: Colors.green,
-                                  content: Text('Successfully dropped'),
-                                ));
-                              },
-                            ),
-                          ],
-                        ) : SizedBox.shrink(),
-                        SizedBox(
-                          width: 20.0,
-                        ),
-                        MaterialButton(
-                          color: Theme.of(context).errorColor,
-                          child: Text('Cancel'),
-                          onPressed: () {
-                            context.read<CurrentRide>().cancleSelection(riderDetailDocument.reference.id);
-                          },
+                  right: 0,
+                  bottom: 0,
+                  left: 0,
+                  child: Container(
+                    height: MediaQuery.of(context).size.height * 0.35,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(18.0),
+                          topRight: Radius.circular(18.0)),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black,
+                          blurRadius: 10.0,
+                          spreadRadius: 0.5,
+                          offset: Offset(0.7, 0.7),
                         ),
                       ],
                     ),
-                  ],
-                ),
-              ),
-            ),
-          )
+                    child: Container(
+                      padding: EdgeInsets.all(10.0),
+                      child: ListView(
+                        children: [
+                          Text(
+                            'Name',
+                            style:
+                                Theme.of(context).textTheme.overline.copyWith(
+                                      color: Colors.black,
+                                    ),
+                          ),
+                          Text(riderDetailDocument['user_name'],
+                              style: TextStyle(color: Colors.black)),
+                          Text(
+                            'Source',
+                            style:
+                                Theme.of(context).textTheme.overline.copyWith(
+                                      color: Colors.black,
+                                    ),
+                          ),
+                          Text(riderDetailDocument['sourceName'],
+                              style: TextStyle(color: Colors.black)),
+                          Text(
+                            'Destination',
+                            style:
+                                Theme.of(context).textTheme.overline.copyWith(
+                                      color: Colors.black,
+                                    ),
+                          ),
+                          Text(riderDetailDocument['destinationName'],
+                              style: TextStyle(color: Colors.black)),
+                          Text(
+                            'Phone Number',
+                            style:
+                                Theme.of(context).textTheme.overline.copyWith(
+                                      color: Colors.black,
+                                    ),
+                          ),
+                          Text(riderDetailDocument['phone_number'],
+                              style: TextStyle(color: Colors.black)),
+                          Wrap(
+                            children: [
+                              riderDetailDocument['hasMeet']
+                                  ? SizedBox.shrink()
+                                  : MaterialButton(
+                                      color: Theme.of(context).primaryColor,
+                                      child: Text('Picked up'),
+                                      onPressed: () {
+                                        context.read<CurrentRide>().setHasMeet(
+                                            true,
+                                            riderDetailDocument.reference.id);
+                                      },
+                                    ),
+                              riderDetailDocument['hasMeet']
+                                  ? Column(
+                                      children: [
+                                        SizedBox(
+                                          width: 20.0,
+                                        ),
+                                        MaterialButton(
+                                          color: Theme.of(context).primaryColor,
+                                          child: Text('Dropped'),
+                                          onPressed: () async {
+                                            await context
+                                                .read<CurrentRide>()
+                                                .setCompleted(
+                                                    riderDetailDocument
+                                                        .reference.id);
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(SnackBar(
+                                              backgroundColor: Colors.green,
+                                              content:
+                                                  Text('Successfully dropped'),
+                                            ));
+                                          },
+                                        ),
+                                      ],
+                                    )
+                                  : SizedBox.shrink(),
+                              SizedBox(
+                                width: 20.0,
+                              ),
+                              MaterialButton(
+                                color: Theme.of(context).errorColor,
+                                child: Text('Cancel'),
+                                onPressed: () {
+                                  context.read<CurrentRide>().clearPolyline();
+                                  context.read<CurrentRide>().cancleSelection(
+                                      riderDetailDocument.reference.id);
+                                },
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                )
               : Positioned(
-            right: 0,
-            bottom: 0,
-            left: 0,
-            child: Container(
-              height: MediaQuery.of(context).size.height * 0.45,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(18.0),
-                    topRight: Radius.circular(18.0)),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black,
-                    blurRadius: 10.0,
-                    spreadRadius: 0.5,
-                    offset: Offset(0.7, 0.7),
-                  )
-                ],
-              ),
-              child: UserSelectionList(
-                isSelected: isSelected,
-              ),
-            ),
-          ),
+                  right: 0,
+                  bottom: 0,
+                  left: 0,
+                  child: Container(
+                    height: MediaQuery.of(context).size.height * 0.45,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(18.0),
+                          topRight: Radius.circular(18.0)),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black,
+                          blurRadius: 10.0,
+                          spreadRadius: 0.5,
+                          offset: Offset(0.7, 0.7),
+                        )
+                      ],
+                    ),
+                    child: UserSelectionList(
+                      isSelected: isSelected,
+                    ),
+                  ),
+                ),
         ],
       ),
     );
