@@ -22,7 +22,7 @@ class _MapState extends State<Map> {
   bool switchValue = false;
   static final CameraPosition initialCameraPosition = CameraPosition(
     target: LatLng(27.69329, 85.32227),
-    zoom: 10.0,
+    zoom: 13.0,
   );
 
   //List userProfilesList = [];
@@ -60,9 +60,10 @@ class _MapState extends State<Map> {
     currentPosition = position;
 
     LatLng pos = LatLng(position.latitude, position.longitude);
-    CameraPosition cp = new CameraPosition(target: pos, zoom: 10);
+    CameraPosition cp = new CameraPosition(target: pos, zoom: 13);
     mapController.animateCamera(CameraUpdate.newCameraPosition(cp));
   }
+
   @override
   Widget build(BuildContext context) {
     isSelected = context.watch<CurrentRide>().isSelected;
@@ -76,7 +77,7 @@ class _MapState extends State<Map> {
               child: Icon(Icons.location_searching),
               onPressed: () async {
                 print('loading polyline');
-                if(_polyline.isNotEmpty) return;
+                if (_polyline.isNotEmpty) return;
                 List<LatLng> polylineCoordinates = [];
                 PolylinePoints polylinePoints = PolylinePoints();
                 PolylineResult polylineResult =
@@ -97,6 +98,9 @@ class _MapState extends State<Map> {
                   color: Color.fromARGB(255, 40, 122, 198),
                   points: polylineCoordinates,
                 );
+                LatLng newLocation = LatLng(double.parse(riderDetailDocument['sourceLat']), double.parse(riderDetailDocument['sourceLng']));
+                CameraPosition cpp = new CameraPosition(target: newLocation, zoom: 13);
+                mapController.animateCamera(CameraUpdate.newCameraPosition(cpp));
                 context.read<CurrentRide>().setPolyline(polyline);
               },
             )
