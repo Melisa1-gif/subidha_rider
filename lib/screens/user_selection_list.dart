@@ -137,9 +137,11 @@ class _UserSelectionListState extends State<UserSelectionList> {
                                 bookingSnapshot.data.docs.length, (index) {
                               var dataWithDetails =
                                   bookingSnapshot.data.docs[index];
+                              print(dataWithDetails.toString());
                               return SourceDestinationView(
                                 user_name: dataWithDetails['user_name'],
                                 sourceName: dataWithDetails['sourceName'],
+                                distance: dataWithDetails['distance'],
                                 destinationName:
                                     dataWithDetails['destinationName'],
                                 phone_number: dataWithDetails['phone_number'],
@@ -236,8 +238,10 @@ class _UserSelectionListState extends State<UserSelectionList> {
                               var dataWithDetails =
                                   bookingSnapshot.data.docs[index];
                               return SourceDestinationView(
+                                ride: true,
                                 user_name: dataWithDetails['user_name'],
                                 sourceName: dataWithDetails['sourceName'],
+                                distance: dataWithDetails['distance'],
                                 destinationName:
                                     dataWithDetails['destinationName'],
                                 phone_number: dataWithDetails['phone_number'],
@@ -260,4 +264,5 @@ class _UserSelectionListState extends State<UserSelectionList> {
       ),
     );
   }
+
 }
