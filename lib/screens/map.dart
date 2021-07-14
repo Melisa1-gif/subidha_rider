@@ -89,7 +89,7 @@ class _MapState extends State<Map> {
                   PointLatLng(double.parse(riderDetailDocument['sourceLat']),
                       double.parse(riderDetailDocument['sourceLng'])),
                 );
-                for (PointLatLng point in polylineResult.points) {
+                for(PointLatLng point in polylineResult.points) {
                   polylineCoordinates
                       .add(LatLng(point.latitude, point.longitude));
                 }
@@ -128,40 +128,7 @@ class _MapState extends State<Map> {
               child: new Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  //Icon(
-                  //Icons.event_available,
-                  // color: Colors.blue,
-                  //),
 
-                  //new Text(
-                  //'Available',
-                  //style: TextStyle(
-                  //color: Colors.red,
-                  //fontSize: 10,
-                  //),
-                  //),
-                  //Switch(
-                  //value: switchValue,
-                  //inactiveThumbColor: Colors.blueGrey,
-                  //inactiveTrackColor: Colors.red,
-                  //activeColor: Colors.black,
-                  //onChanged: (value) {
-                  //setState(() {
-                  //switchValue = value;
-                  //});
-                  //},
-                  //),
-                  //new Text(
-                  //'Not Available',
-                  //style: TextStyle(
-                  //color: Colors.black,
-                  //fontSize: 10,
-                  //),
-                  //)
-                  //Icon(
-                  // Icons.time_to_leave,
-                  //color: Colors.red,
-                  //),
                 ],
               )),
           isSelected
